@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 功能模块: 用户基础表 -->
+<mapper namespace="cn.vimor.data.layer.cache.mapper.UserMapper">
+
+    <!--通用表字段列表-->
+    <resultMap id="resultMap" type="cn.vimor.data.layer.cache.entity.UserInfoEntity">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--通用表字段列表-->
+
+    <!--user customize code start-->
+
+    <insert id="insert" parameterType="cn.vimor.data.layer.cache.entity.UserInfoEntity">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                `id`,
+            </if>
+            <if test="username != null">
+                `username`,
+            </if>
+            <if test="age != null">
+                `age`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Long" resultType="cn.vimor.data.layer.cache.entity.UserInfoEntity">
+        select *
+        from `user`
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="update">
+        update `user`
+        set username = #{username}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectAll" resultType="java.lang.Long">
+        select id
+        from `user`
+    </select>
+
+    <select id="findByAge" resultType="java.lang.Long">
+        select id
+        from `user`
+        where age = #{age,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAllById" resultType="cn.vimor.data.layer.cache.entity.UserInfoEntity">
+        select *
+        from `user`
+        where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>
